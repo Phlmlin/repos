@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Repos — Hôtels, motels & maisons meublées au Gabon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site">
+      <div class="wrap bar">
+        <a class="logo" href="#" data-nav="home" aria-label="Repos — accueil">
+          <span class="mark" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18h18"/><path d="M5 10V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/><path d="M7 7h4"/></svg>
+          </span>
+          Repos<em>.</em>
+        </a>
+        <nav class="main" aria-label="Navigation principale">
+          <button type="button" data-nav="home" aria-current="page">Accueil</button>
+          <button type="button" data-nav="near">Autour de moi</button>
+          <button type="button" data-nav="host">Espace tenanciers</button>
+        </nav>
+        <div class="spacer"></div>
+        <div class="role-switcher">
+          <label for="roleSelect">Rôle</label>
+          <select id="roleSelect" aria-label="Changer de rôle dans la démonstration">
+            <option value="client">Client</option>
+            <option value="host">Tenancier</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <a class="btn btn-ghost btn-sm" href="#faq">Aide</a>
+        <button type="button" class="btn btn-account btn-sm" data-nav="account"><span class="acct-av" aria-hidden="true">G</span><span class="txt">Mon compte</span></button>
+        <button type="button" class="btn btn-cta btn-sm" data-nav="host">Devenir tenancier</button>
+      </div>
+    </header>
+    <div class="demo-banner" role="note">Démo visuelle partageable — les établissements, prix, notes et avis affichés sont des exemples fictifs, rien n'est enregistré.</div>
+
+    <main>
+      <!-- ================= HOME ================= -->
+      <div id="view-home">
+        <section class="hero" style="padding:0">
+          <img class="bg" src="assets/img-60a2df680a5a.jpeg" alt="Chambre d'hôtel haut de gamme à Libreville, lit king-size et lumière chaude" />
+          <div class="veil"></div>
+          <div class="wrap inner">
+            <h1>Un vrai repos, <span class="sun">à deux pas de chez vous</span>, au Gabon</h1>
+            <p class="sub">Motels, hôtels, maisons meublées et auberges à Libreville, Port-Gentil, Franceville et partout au Gabon — pour quelques heures ou pour la nuit, sans vous ruiner.</p>
+            <form class="searchbar" id="searchForm" role="search" aria-label="Rechercher un hébergement">
+              <div class="field">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div style="flex:1;min-width:0">
+                  <label for="qCity">Où allez-vous ?</label>
+                  <select id="qCity">
+                    <option value="">Tout le Gabon</option>
+                    <option>Libreville</option>
+                    <option>Port-Gentil</option>
+                    <option>Franceville</option>
+                    <option>Owendo</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                <div style="flex:1;min-width:0">
+                  <label for="qDate">Arrivée</label>
+                  <input type="date" id="qDate" />
+                </div>
+              </div>
+              <div class="field">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                <div style="flex:1;min-width:0">
+                  <label for="qSlot">Durée</label>
+                  <select id="qSlot">
+                    <option value="3h">Sieste · 3 h</option>
+                    <option value="6h">Pause · 6 h</option>
+                    <option value="jour">Journée</option>
+                    <option value="nuit" selected>La nuit</option>
+                  </select>
+                </div>
+              </div>
+              <button class="btn btn-cta go" type="submit">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                Rechercher
+              </button>
+            </form>
+            <div class="micro">
+              <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> 4 moyens de paiement</span>
+              <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Annulation gratuite</span>
+              <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Jusqu'à −60 % en journée</span>
+            </div>
+            <div class="near-cta">
+              <button type="button" class="btn" id="btnGeoHero">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                Autour de moi — voir ce qu'il y a près d'ici
+              </button>
+              <p class="geo-msg" id="geoMsgHero" role="status"></p>
+            </div>
+          </div>
+        </section>
+
+        <div class="wrap trust">
+          <div class="card">
+            <div class="item">
+              <span class="ic" style="background:#e3f4ea;color:#177245"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/><path d="m9 11.5 2 2 4-4.5"/></svg></span>
+              <div><b>Annulation gratuite</b><small>Jusqu'à la dernière minute, sans frais</small></div>
+            </div>
+            <div class="item">
+              <span class="ic" style="background:#fdf0d9;color:#b45309"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+              <div><b>Payez comme vous voulez</b><small>Airtel Money, Moov Money, carte ou paiement à l'arrivée</small></div>
+            </div>
+            <div class="item">
+              <span class="ic" style="background:#ffe9e4;color:#f66236"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.6 2.9 21 11.3a2 2 0 0 1 0 2.8l-6.9 6.9a2 2 0 0 1-2.8 0L2.9 12.6A2 2 0 0 1 2.3 11L3.7 4.3A2 2 0 0 1 5 .9l6.7-1.4a2 2 0 0 1 .9 3.4Z" transform="scale(.92) translate(1 1)"/><path d="m15 9-6 6M9 9h.01M15 15h.01"/></svg></span>
+              <div><b>Jusqu'à −60 %</b><small>Sur le tarif de nuit, en réservant en journée</small></div>
+            </div>
+            <div class="item">
+              <span class="ic" style="background:#e6f2f0;color:#1f7a6d"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></svg></span>
+              <div><b>Avis voyageurs</b><small>Notes et avis d'exemple, affichés pour la démonstration</small></div>
+            </div>
+          </div>
+        </div>
+
+        <section>
+          <div class="wrap">
+            <p class="kicker">Par type d'hébergement</p>
+            <h2 class="title">Que cherchez-vous aujourd'hui ?</h2>
+            <p class="lead">Du motel discret pour une sieste au bord de la route à la maison meublée pour toute la famille : il y a un Repos pour chaque moment.</p>
+            <div class="cats" id="cats"></div>
+          </div>
+        </section>
+
+        <section style="padding-top:0">
+          <div class="wrap">
+            <p class="kicker">Notre sélection</p>
+            <h2 class="title">Les hébergements qui ont la cote</h2>
+            <p class="lead">Filtrez par ville, par type ou par budget — les prix affichés sont ceux de la journée, taxes comprises.</p>
+            <div class="filters" role="group" aria-label="Filtres par ville" id="cityPills"></div>
+            <div class="filters">
+              <label class="range">Budget max.
+                <input type="range" id="fPrice" min="5000" max="30000" step="1000" value="30000" aria-label="Budget maximum en FCFA" />
+                <span id="fPriceVal">30 000 FCFA</span>
+              </label>
+              <select class="sel" id="fSort" aria-label="Trier les résultats">
+                <option value="pop">Tri : popularité</option>
+                <option value="price-asc">Prix croissant</option>
+                <option value="price-desc">Prix décroissant</option>
+                <option value="rating">Meilleures notes</option>
+                <option value="dist">Le plus proche</option>
+              </select>
+              <select class="sel" id="fType" aria-label="Filtrer par type">
+                <option value="">Tous les types</option>
+                <option>Hôtel</option>
+                <option>Motel</option>
+                <option>Maison meublée</option>
+                <option>Auberge</option>
+              </select>
+            </div>
+            <p class="results-meta" id="resultsMeta"></p>
+            <div class="grid" id="grid"></div>
+          </div>
+        </section>
+
+        <section style="padding-top:0">
+          <div class="wrap">
+            <div class="steps-sec">
+              <p class="kicker" style="color:var(--yellow)">Simple comme bonjour</p>
+              <h2 class="title" style="color:#fff">Réserver en 3 étapes</h2>
+              <div class="steps">
+                <div class="step"><div class="num">1</div><h3>Trouvez</h3><p>Cherchez par ville ou touchez « Autour de moi » : Repos géolocalise les établissements ouverts près de vous, avec la distance exacte.</p></div>
+                <div class="step"><div class="num">2</div><h3>Réservez et choisissez</h3><p>Sélectionnez votre créneau, puis Airtel Money, Moov Money, carte bancaire ou paiement sur place. Dans cette démo, aucun débit réel n'est effectué.</p></div>
+                <div class="step"><div class="num">3</div><h3>Reposez-vous</h3><p>Recevez votre code et votre QR, retrouvez le moyen choisi sur le reçu, puis présentez-vous à l'accueil de l'établissement.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section style="padding-top:0">
+          <div class="wrap">
+            <div class="banner">
+              <div class="txt">
+                <p class="kicker">Cap sur la Pointe Denis</p>
+                <h2 class="title">Une pause les pieds dans le sable, à 15 minutes de Libreville</h2>
+                <p class="lead">Auberges et lodges en bord de mer, déjeuner les pieds dans l'eau et sieste face à l'Atlantique. Départs en pirogue depuis le port Michel Marine.</p>
+                <button type="button" class="btn btn-green" data-goto-near>Voir les hébergements proches de la mer</button>
+              </div>
+              <img src="assets/img-324dac6ef302.jpeg" alt="Plage de sable fin bordée de palmiers sur la côte gabonaise" loading="lazy" />
+            </div>
+          </div>
+        </section>
+
+        <section style="padding-top:0">
+          <div class="wrap">
+            <p class="kicker">Ils ont testé Repos</p>
+            <h2 class="title">4,8/5 — la note de nos voyageurs</h2>
+            <p class="lead">Des siestes entre deux vols, des week-ends en famille, des nuits au calme : voici ce qu'ils racontent.</p>
+            <div class="avis">
+              <article class="card">
+                <div class="stars" aria-label="5 étoiles sur 5">★★★★★</div>
+                <p>« Escale de 6 heures à Libreville : j'ai dormi 3 heures au calme à Lalala pour 7 500 FCFA au lieu d'attendre sur un siège de l'aéroport. Le paiement sur place change tout. »</p>
+                <div class="who"><span class="avatar" style="background:#0e3b2e">SM</span><div><b>Steeve M.</b><br /><small style="color:var(--ink-soft);font-weight:600">En escale · Motel Le Phare, Lalala</small></div></div>
+              </article>
+              <article class="card">
+                <div class="stars" aria-label="5 étoiles sur 5">★★★★★</div>
+                <p>« Nous avons pris une maison meublée à Okala pour le week-end avec les enfants : cuisine, jardin, et le prix d'une seule nuit d'hôtel en centre-ville. On y retourne le mois prochain. »</p>
+                <div class="who"><span class="avatar" style="background:#f66236">LN</span><div><b>Laetitia N.</b><br /><small style="color:var(--ink-soft);font-weight:600">Week-end famille · Villa Okala Park</small></div></div>
+              </article>
+              <article class="card">
+                <div class="stars" aria-label="4 étoiles sur 5">★★★★☆</div>
+                <p>« Je tiens une auberge à Port-Gentil : depuis que je suis sur Repos, mes chambres vides en journée sont louées presque tous les jours. Le tableau de bord est très simple. »</p>
+                <div class="who"><span class="avatar" style="background:#1f7a6d">PO</span><div><b>Patrick O.</b><br /><small style="color:var(--ink-soft);font-weight:600">Tenancier · Lodge Okoumé, Port-Gentil</small></div></div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section style="padding-top:0" id="faq">
+          <div class="wrap" style="max-width:820px">
+            <p class="kicker">Questions fréquentes</p>
+            <h2 class="title">Tout savoir avant de réserver</h2>
+            <div style="height:18px"></div>
+            <details class="faq"><summary>Peut-on vraiment réserver pour quelques heures seulement ?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></summary><div class="ans">Oui. La plupart des établissements proposent des créneaux de 3 h ou 6 h en journée, entre 8 h et 18 h, à un tarif réduit jusqu'à −60 % par rapport à la nuit. C'est idéal pour une sieste, une escale, un rendez-vous de travail ou un moment au calme.</div></details>
+            <details class="faq"><summary>Comment se passe le paiement ?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></summary><div class="ans">Vous choisissez entre Airtel Money, Moov Money, carte bancaire ou paiement sur place. Cette version est une démonstration visuelle : les écrans Mobile Money et carte simulent la confirmation, sans traiter ni conserver aucune donnée de paiement.</div></details>
+            <details class="faq"><summary>Puis-je annuler ma réservation ?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></summary><div class="ans">L'annulation est gratuite jusqu'à l'heure d'arrivée prévue. Un imprévu sur la route de Franceville ou un vol retardé ? Annulez en un geste, sans frais et sans justification.</div></details>
+            <details class="faq"><summary>Comment fonctionne « Autour de moi » ?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></summary><div class="ans">Touchez le bouton « Autour de moi » et autorisez la localisation : Repos affiche les établissements les plus proches sur une carte, triés par distance, avec le temps de route estimé. Votre position n'est jamais conservée.</div></details>
+            <details class="faq"><summary>Je tiens un hôtel ou une auberge, comment rejoindre Repos ?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></summary><div class="ans">Créez votre espace tenancier en quelques minutes : ajoutez vos chambres, vos photos et vos tarifs de journée. Vous recevez les réservations en temps réel et ne payez une commission que lorsqu'une chambre est effectivement louée.</div></details>
+          </div>
+        </section>
+
+        <section style="padding-top:0">
+          <div class="wrap">
+            <div class="steps-sec" style="background:linear-gradient(135deg,#20242b,#3a3f47)">
+              <div style="display:flex;flex-wrap:wrap;gap:26px;align-items:center;justify-content:space-between">
+                <div style="max-width:620px">
+                  <p class="kicker" style="color:var(--yellow)">Tenanciers</p>
+                  <h2 class="title" style="color:#fff;margin-bottom:8px">Vos chambres vides en journée peuvent rapporter gros</h2>
+                  <p style="opacity:.85;font-weight:600;margin:0">Rejoignez plus de 120 établissements au Gabon qui remplissent leurs journées avec Repos. Inscription gratuite, commission uniquement sur les réservations confirmées.</p>
+                </div>
+                <button type="button" class="btn btn-cta" data-nav="host">Ouvrir mon espace tenancier</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================= NEAR ================= -->
+      <div id="view-near" class="hidden">
+        <section>
+          <div class="wrap">
+            <p class="kicker">Géolocalisation</p>
+            <h2 class="title">Autour de moi</h2>
+            <p class="lead" id="nearLead">Les établissements les plus proches de votre position, triés par distance. Touchez un repère sur la carte ou un établissement dans la liste pour le retrouver des deux côtés.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px">
+              <button type="button" class="btn btn-green" id="btnGeoNear">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                Me localiser
+              </button>
+              <button type="button" class="btn btn-ghost" id="btnDemoPos">Position de démonstration : Lalala, Libreville</button>
+            </div>
+            <p class="geo-msg" id="geoMsgNear" role="status" style="background:var(--bg-soft);color:var(--ink);border:1px solid var(--line);margin:0 0 18px"></p>
+            <div class="near-layout">
+              <div>
+                <div id="map" role="application" aria-label="Carte des hébergements autour de moi"></div>
+                <p style="font-weight:600;color:var(--ink-soft);font-size:13px;margin:10px 2px 0" id="mapNote">La liste ci-contre reste utilisable même si la carte ne peut pas s'afficher.</p>
+              </div>
+              <div class="near-list" id="nearList"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================= HOST ================= -->
+      <div id="view-host" class="hidden">
+        <section>
+          <div class="wrap">
+            <div class="host-dashboard-head">
+              <div>
+                <p class="kicker">Espace tenanciers</p>
+                <h2 class="title">Tableau de bord</h2>
+                <p class="lead">Bienvenue, Hôtel Les Arcades du Bord de Mer. Voici vos réservations du jour, vos revenus et vos établissements. <strong>Démo interactive : explorez librement, rien n'est enregistré.</strong></p>
+              </div>
+              <div class="host-alert-wrap">
+                <button type="button" class="host-alert-bell" id="hostAlertBell" aria-label="Ouvrir le centre d'alertes" aria-expanded="false" aria-controls="hostAlertPopover">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+                  <span class="host-alert-count" id="hostAlertCount">4</span>
+                </button>
+                <div class="host-alert-popover hidden" id="hostAlertPopover" aria-live="polite">
+                  <div class="host-alert-pop-head"><h3>Alertes en temps réel</h3><button type="button" id="hostAlertsRead">Tout marquer comme lu</button></div>
+                  <div class="host-alert-feed" id="hostAlertFeed"></div>
+                  <div class="host-alert-pop-foot"><button type="button" id="openAlertSettings">Gérer l’équipe et les alertes</button></div>
+                </div>
+              </div>
+            </div>
+            <div class="dash">
+              <aside class="side">
+                <div class="prop">
+                  <img src="assets/img-b4308f5cd561.jpeg" alt="Façade de l'Hôtel Les Arcades du Bord de Mer" />
+                  <div><b style="display:block;line-height:1.25">Les Arcades du Bord de Mer</b><small style="color:var(--ink-soft);font-weight:700">Libreville · ★★★★</small></div>
+                </div>
+                <nav aria-label="Menu tenancier">
+                  <button type="button" data-dash="overview" aria-current="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Vue d'ensemble</button>
+                  <button type="button" data-dash="bookings" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Réservations</button>
+                  <button type="button" data-dash="calendar" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18"/><path d="M8 13h2M14 13h2M8 17h2M14 17h2"/></svg>Disponibilités</button>
+                  <button type="button" data-dash="rates" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V5a2 2 0 0 0-2-2h-7L3 11l10 10 8-8-1-1Z"/><circle cx="15.5" cy="7.5" r="1"/><path d="m9 13 4 4m0-4-4 4"/></svg>Tarifs</button>
+                  <button type="button" data-dash="extras" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>Extras</button>
+                  <button type="button" data-dash="messages" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/><path d="M8 9h8M8 13h5"/></svg>Messages <span class="unread-badge nav-unread" id="hostUnreadNav">0</span></button>
+                  <button type="button" data-dash="reviews" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"/></svg>Avis</button>
+                  <button type="button" data-dash="finances" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h5M7 6V4h10v2"/><circle cx="16" cy="12.5" r="1"/></svg>Finances</button>
+                  <button type="button" data-dash="team" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M16 11h6"/></svg>Équipe</button>
+                  <button type="button" data-dash="listings" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18h18"/><path d="M5 10V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/></svg>Mes établissements</button>
+                  <button type="button" data-dash="add" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Ajouter un hébergement</button>
+                </nav>
+              </aside>
+              <div>
+                <div id="dash-overview">
+                  <div class="kpis">
+                    <div class="kpi"><small>Revenus du mois</small><b>486 500 FCFA</b><span class="delta">▲ +18 % vs septembre</span></div>
+                    <div class="kpi"><small>Réservations (oct.)</small><b>64</b><span class="delta">▲ +12 ce mois</span></div>
+                    <div class="kpi"><small>Occupation en journée</small><b>72 %</b><span class="delta">▲ +9 points</span></div>
+                    <div class="kpi"><small>Note moyenne</small><b id="hostKpiNote">4,8 / 5</b><span class="delta" id="hostKpiReviews">326 avis vérifiés</span></div>
+                  </div>
+                  <div class="panel">
+                    <h3>Réservations des 7 derniers jours</h3>
+                    <svg class="chart" viewBox="0 0 640 230" role="img" aria-label="Graphique en barres : réservations par jour, de samedi à vendredi, pic le vendredi à 14">
+                      <line x1="34" y1="190" x2="630" y2="190" stroke="var(--line)" stroke-width="1"/>
+                      <g>
+                        <rect class="bar" x="55" y="130" width="52" height="60" rx="8"/><text x="81" y="212" text-anchor="middle">sam.</text><text x="81" y="120" text-anchor="middle">6</text>
+                        <rect class="bar" x="140" y="110" width="52" height="80" rx="8"/><text x="166" y="212" text-anchor="middle">dim.</text><text x="166" y="100" text-anchor="middle">8</text>
+                        <rect class="bar" x="225" y="145" width="52" height="45" rx="8"/><text x="251" y="212" text-anchor="middle">lun.</text><text x="251" y="135" text-anchor="middle">4</text>
+                        <rect class="bar" x="310" y="120" width="52" height="70" rx="8"/><text x="336" y="212" text-anchor="middle">mar.</text><text x="336" y="110" text-anchor="middle">7</text>
+                        <rect class="bar" x="395" y="100" width="52" height="90" rx="8"/><text x="421" y="212" text-anchor="middle">mer.</text><text x="421" y="90" text-anchor="middle">9</text>
+                        <rect class="bar" x="480" y="90" width="52" height="100" rx="8"/><text x="506" y="212" text-anchor="middle">jeu.</text><text x="506" y="80" text-anchor="middle">10</text>
+                        <rect class="bar hot" x="565" y="50" width="52" height="140" rx="8"/><text x="591" y="212" text-anchor="middle">ven.</text><text x="591" y="40" text-anchor="middle">14</text>
+                      </g>
+                    </svg>
+                    <p style="margin:8px 0 0;color:var(--ink-soft);font-weight:600;font-size:14px">Le vendredi est votre jour le plus fort : pensez à ouvrir vos créneaux de sieste dès 11 h pour capter les voyageurs en escale.</p>
+                  </div>
+                  <div class="panel">
+                    <h3>Prochaines arrivées</h3>
+                    <div id="nextArrivals"></div>
+                  </div>
+                </div>
+
+                <div id="dash-bookings" class="hidden">
+                  <div class="panel" style="margin-top:0">
+                    <h3>Réservations du vendredi 2 octobre 2026</h3>
+                    <table class="book">
+                      <thead><tr><th>Client</th><th>Chambre</th><th>Créneau</th><th>Montant</th><th>Statut</th><th></th></tr></thead>
+                      <tbody id="bookBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div id="dash-calendar" class="hidden">
+                  <div class="panel" style="margin-top:0">
+                    <div class="cal-top">
+                      <div><h3>Calendrier des disponibilités</h3><p>Gérez les créneaux proposés aux voyageurs, établissement par établissement.</p></div>
+                      <div class="cal-property"><label for="calProperty">Établissement</label><select id="calProperty" aria-label="Établissement à gérer"></select></div>
+                    </div>
+                    <div class="cal-tabs" role="group" aria-label="Vue du calendrier">
+                      <button type="button" class="pill" data-calview="month" aria-pressed="true">Mois</button>
+                      <button type="button" class="pill" data-calview="today" aria-pressed="false">Aujourd'hui</button>
+                    </div>
+                    <div id="cal-month-view">
+                      <div class="cal-toolbar">
+                        <div class="cal-nav"><button type="button" id="calPrev" aria-label="Mois précédent">‹</button></div>
+                        <h4 id="calTitle"></h4>
+                        <div class="cal-nav"><button type="button" id="calNext" aria-label="Mois suivant">›</button></div>
+                      </div>
+                      <div class="cal-legend" aria-label="Code couleur"><span><i class="status-dot available"></i>Disponible</span><span><i class="status-dot reserved"></i>Réservé</span><span><i class="status-dot blocked"></i>Bloqué</span></div>
+                      <div class="calendar-grid" id="calendarGrid" aria-label="Calendrier mensuel"></div>
+                      <div class="day-editor" id="dayEditor" aria-live="polite"></div>
+                    </div>
+                    <div id="cal-today-view" class="hidden">
+                      <div class="cal-top" style="margin-bottom:14px"><div><h3 id="todayTitle">Aujourd'hui</h3><p id="todaySub"></p></div></div>
+                      <div class="today-flow" id="todayFlow"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="dash-rates" class="hidden">
+                  <div class="panel" style="margin-top:0">
+                    <div class="rates-head">
+                      <div><h3>Tarification dynamique</h3><p>Modifiez les prix par créneau. Les cartes, la recherche et la réservation se mettent à jour immédiatement.</p></div>
+                      <div class="cal-property"><label for="rateProperty">Établissement</label><select id="rateProperty" aria-label="Établissement dont les tarifs sont modifiés"></select></div>
+                    </div>
+                    <div class="rate-table" id="rateTable" aria-label="Grille des tarifs semaine et week-end"></div>
+                    <p class="rate-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Les changements sont appliqués dès la saisie, uniquement en mémoire pour cette démo. Le tarif week-end s'applique le samedi et le dimanche.</span></p>
+                  </div>
+                  <div class="panel">
+                    <div class="flash-layout">
+                      <div>
+                        <h3>Créer une Promo flash</h3>
+                        <p style="margin:-7px 0 16px;color:var(--ink-soft);font-weight:600;font-size:14px">Programmez une remise temporaire pour l'établissement sélectionné. Un badge et un compte à rebours apparaissent côté client.</p>
+                        <form id="flashForm">
+                          <div class="form-grid">
+                            <div class="f-field"><label for="flashDiscount">Remise</label><div class="money-input"><input id="flashDiscount" type="number" min="5" max="80" step="5" value="50" required /><span>%</span></div></div>
+                            <div class="f-field"><label for="flashStart">Début</label><input id="flashStart" type="datetime-local" required /></div>
+                            <div class="f-field"><label for="flashEnd">Fin</label><input id="flashEnd" type="datetime-local" required /></div>
+                          </div>
+                          <button type="submit" class="btn btn-cta" style="margin-top:16px">Activer la Promo flash</button>
+                        </form>
+                      </div>
+                      <div class="flash-card" id="flashStatus" aria-live="polite"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="dash-extras" class="hidden">
+                  <div class="panel" style="margin-top:0">
+                    <div class="rates-head">
+                      <div><h3>Extras à vendre</h3><p>Proposez des services payants dans le tunnel de réservation, établissement par établissement.</p></div>
+                      <div class="cal-property"><label for="extraProperty">Établissement</label><select id="extraProperty" aria-label="Établissement dont les extras sont gérés"></select></div>
+                    </div>
+                    <div class="extras-layout" style="margin-top:18px">
+                      <div>
+                        <div class="extras-catalog" id="extrasCatalog" aria-live="polite"></div>
+                        <p class="rate-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Un extra actif apparaît immédiatement côté client. Prix et interrupteurs restent en mémoire uniquement pendant cette visite.</span></p>
+                      </div>
+                      <aside class="flash-card">
+                        <h4>Ajouter un nouvel extra</h4>
+                        <p class="flash-meta" style="margin-bottom:14px">Il sera ajouté à l'établissement sélectionné, puis pourra être activé ou masqué.</p>
+                        <form id="extraForm">
+                          <div class="f-field"><label for="extraName">Nom de l'extra</label><input id="extraName" required maxlength="60" placeholder="Ex. Plateau de fruits" /></div>
+                          <div class="form-grid" style="margin-top:12px">
+                            <div class="f-field"><label for="extraPrice">Prix (FCFA)</label><input id="extraPrice" type="number" min="0" step="500" value="5000" required /></div>
+                            <div class="f-field"><label for="extraIcon">Icône</label><select id="extraIcon"><option value="breakfast">Petit-déjeuner</option><option value="pool">Piscine / spa</option><option value="shuttle">Navette</option><option value="late">Horloge</option><option value="gift">Cadeau</option></select></div>
+                          </div>
+                          <button type="submit" class="btn btn-cta" style="width:100%;justify-content:center;margin-top:14px">Ajouter au catalogue</button>
+                        </form>
+                        <p class="extra-form-note">Démonstration visuelle : aucun extra n'est enregistré sur un serveur.</p>
+                      </aside>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="dash-messages" class="hidden">
+                  <div class="panel" style="margin-top:0;padding:0;overflow:hidden">
+                    <div class="messages-layout">
+                      <aside class="conversation-pane" aria-label="Conversations clients">
+                        <div class="conversation-head"><h3>Messages</h3><p>Conversations liées aux réservations et demandes clients.</p></div>
+                        <div class="conversation-list" id="hostConversationList"></div>
+                      </aside>
+                      <section class="thread-pane" id="hostThreadPane" aria-live="polite">
+                        <div class="thread-head" id="hostThreadHead"></div>
+                        <div class="thread-messages" id="hostThreadMessages"></div>
+                        <div class="quick-replies" id="hostQuickReplies" aria-label="Réponses rapides"></div>
+                        <form class="message-compose" id="hostMessageForm">
+                          <label class="hidden" for="hostMessageInput">Réponse au client</label>
+                          <textarea id="hostMessageInput" rows="1" maxlength="500" placeholder="Écrire une réponse…" required></textarea>
+                          <button type="submit" class="btn btn-green btn-sm">Envoyer</button>
+                        </form>
+                      </section>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="dash-reviews" class="hidden">
+                  <div class="panel" style="margin-top:0">
+                    <div class="rates-head">
+                      <div><h3>Avis &amp; e-réputation</h3><p>Suivez la satisfaction des voyageurs et répondez publiquement à leurs commentaires.</p></div>
+                      <div class="cal-property"><label for="reviewProperty">Établissement</label><select id="reviewProperty" aria-label="Établissement dont les avis sont affichés"></select></div>
+                    </div>
+                    <div class="review-summary" id="hostReviewSummary" style="margin-top:18px"></div>
+                  </div>
+                  <div class="panel">
+                    <div class="rates-head" style="margin-bottom:16px"><div><h3>Avis récents</h3><p id="hostReviewCount">Les avis publiés par les clients apparaissent ici automatiquement.</p></div></div>
+                    <div class="host-review-list" id="hostReviewList" aria-live="polite"></div>
+                  </div>
+                </div>
+
+                <div id="dash-finances" class="hidden">
+                  <div class="panel" style="margin-top:0">
+                    <div class="rates-head">
+                      <div><h3>Finances</h3><p>Suivez vos revenus nets, les commissions Repos et vos versements Mobile Money.</p></div>
+                      <button type="button" class="btn btn-cta btn-sm" id="openWithdraw">Demander un retrait</button>
+                    </div>
+                    <div class="finance-kpis" style="margin-top:18px">
+                      <div class="finance-kpi available"><small>Solde disponible</small><strong id="financeAvailable">0 FCFA</strong><span>Retirable maintenant</span></div>
+                      <div class="finance-kpi pending"><small>Solde en attente</small><strong id="financePending">0 FCFA</strong><span>Libéré après le séjour</span></div>
+                      <div class="finance-kpi"><small>Commissions Repos</small><strong id="financeCommission">0 FCFA</strong><span>Sur le relevé affiché</span></div>
+                    </div>
+                    <div class="withdraw-box hidden" id="withdrawBox">
+                      <div class="withdraw-head"><div><h4>Retrait Mobile Money</h4><p>Cette demande est entièrement simulée et reste en mémoire pendant la démo.</p></div><button type="button" class="icon-btn" id="closeWithdraw" aria-label="Fermer la demande de retrait">×</button></div>
+                      <form id="withdrawForm">
+                        <div class="form-grid">
+                          <div class="f-field"><label for="withdrawAmount">Montant (FCFA)</label><input id="withdrawAmount" type="number" min="1000" step="500" required /></div>
+                          <div class="f-field"><label for="withdrawProvider">Réseau Mobile Money</label><select id="withdrawProvider"><option value="Airtel Money">Airtel Money</option><option value="Moov Money">Moov Money</option></select></div>
+                          <div class="f-field"><label for="withdrawPhone">Numéro de téléphone</label><input id="withdrawPhone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="Ex. 074 00 00 00" /></div>
+                        </div>
+                        <button type="submit" class="btn btn-green" style="margin-top:16px">Confirmer la demande</button>
+                      </form>
+                      <div class="withdraw-success hidden" id="withdrawSuccess" role="status"></div>
+                    </div>
+                  </div>
+                  <div class="panel">
+                    <div class="rates-head" style="margin-bottom:14px">
+                      <div><h3>Relevé des transactions</h3><p>Montants bruts, commission appliquée et montant net perçu par réservation.</p></div>
+                      <div class="finance-actions"><button type="button" class="btn btn-ghost btn-sm" id="exportFinanceCsv"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-4 5 5 5-5M4 21h16"/></svg>Exporter CSV</button><button type="button" class="btn btn-ghost btn-sm" id="exportFinancePdf"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5M9 13h6M9 17h4"/></svg>Exporter PDF</button></div>
+                    </div>
+                    <table class="book finance-table">
+                      <thead><tr><th>Réservation</th><th>Date</th><th>Client</th><th>Montant brut</th><th>Commission Repos</th><th>Net perçu</th><th>Statut</th></tr></thead>
+                      <tbody id="financeTransactions"></tbody>
+                    </table>
+                  </div>
+                  <div class="panel">
+                    <div class="rates-head" style="margin-bottom:14px"><div><h3>Historique des retraits</h3><p>Suivi des demandes de versement vers Airtel Money et Moov Money.</p></div></div>
+                    <div class="withdraw-history" id="withdrawHistory" aria-live="polite"></div>
+                  </div>
+                </div>
+
+                <div id="dash-team" class="hidden">
+                  <div class="panel" style="margin-top:0">
+                    <div class="rates-head">
+                      <div><h3>Équipe</h3><p>Gérez les accès de votre établissement et attribuez un rôle à chaque membre.</p></div>
+                      <button type="button" class="btn btn-cta btn-sm" id="openInvite">Inviter un membre</button>
+                    </div>
+                    <div class="team-layout" style="margin-top:18px">
+                      <div class="team-list" id="teamList" aria-live="polite"></div>
+                      <aside class="invite-card hidden" id="inviteCard">
+                        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><h4>Nouvelle invitation</h4><p>Le membre apparaîtra comme invité dans cette démo.</p></div><button type="button" class="icon-btn" id="closeInvite" aria-label="Fermer le formulaire d'invitation">×</button></div>
+                        <form id="inviteForm">
+                          <div class="f-field"><label for="memberName">Nom complet</label><input id="memberName" required maxlength="60" placeholder="Ex. Estelle Mba" /></div>
+                          <div class="f-field" style="margin-top:11px"><label for="memberContact">Téléphone ou email</label><input id="memberContact" required maxlength="80" placeholder="Ex. 074 00 00 00 ou nom@email.com" /></div>
+                          <div class="f-field" style="margin-top:11px"><label for="memberRole">Rôle</label><select id="memberRole"><option>Propriétaire</option><option>Manager</option><option>Réceptionniste</option></select></div>
+                          <button type="submit" class="btn btn-green" style="width:100%;justify-content:center;margin-top:14px">Envoyer l’invitation</button>
+                        </form>
+                      </aside>
+                    </div>
+                  </div>
+                  <div class="panel">
+                    <div class="rates-head" style="margin-bottom:16px"><div><h3>Permissions par rôle</h3><p>Vue d’ensemble des actions autorisées pour chaque profil.</p></div></div>
+                    <div class="permissions" id="permissionMatrix" aria-label="Matrice des permissions par rôle"></div>
+                    <div class="permission-cards" id="permissionCards"></div>
+                  </div>
+                  <div class="panel">
+                    <div class="rates-head" style="margin-bottom:16px"><div><h3>Réglages des alertes</h3><p>Choisissez, pour chaque événement, les canaux utilisés : WhatsApp, SMS ou Email.</p></div></div>
+                    <div class="alert-settings" id="hostAlertSettings" aria-label="Réglages des alertes par type et canal"></div>
+                    <p class="rate-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Les invitations et préférences restent en mémoire uniquement pendant cette visite. Aucun message n’est envoyé dans cette démonstration.</span></p>
+                  </div>
+                </div>
+
+                <div id="dash-listings" class="hidden">
+                  <div class="panel" style="margin-top:0">
+                    <h3>Mes établissements</h3>
+                    <div class="my-list" id="myList"></div>
+                  </div>
+                </div>
+
+                <div id="dash-add" class="hidden">
+                  <div class="panel" style="margin-top:0">
+                    <h3>Ajouter un hébergement</h3>
+                    <form id="addForm">
+                      <div class="form-grid">
+                        <div class="f-field"><label for="aName">Nom de l'établissement</label><input id="aName" required placeholder="Ex. Villa Les Manguiers" /></div>
+                        <div class="f-field"><label for="aType">Type</label><select id="aType"><option>Hôtel</option><option>Motel</option><option>Maison meublée</option><option>Auberge</option></select></div>
+                        <div class="f-field"><label for="aCity">Ville</label><select id="aCity"><option>Libreville</option><option>Port-Gentil</option><option>Franceville</option><option>Owendo</option></select></div>
+                        <div class="f-field"><label for="aQuarter">Quartier</label><input id="aQuarter" required placeholder="Ex. Angondjé" /></div>
+                        <div class="f-field"><label for="aDay">Tarif journée (FCFA)</label><input id="aDay" type="number" min="1000" step="500" value="10000" required /></div>
+                        <div class="f-field"><label for="aNight">Tarif nuit (FCFA)</label><input id="aNight" type="number" min="1000" step="500" value="22000" required /></div>
+                      </div>
+                      <div class="f-field" style="margin-top:14px"><label for="aDesc">Équipements (séparés par des virgules)</label><input id="aDesc" placeholder="Climatisation, Wifi, Parking" /></div>
+                      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+                        <button class="btn btn-cta" type="submit">Publier l'établissement</button>
+                        <span style="align-self:center;font-weight:600;color:var(--ink-soft);font-size:14px">Il apparaîtra aussitôt dans la recherche publique (démo, dans cet onglet uniquement).</span>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <!-- ================= ADMIN ================= -->
+      <div id="view-admin" class="hidden">
+        <section>
+          <div class="wrap">
+            <div style="margin-bottom:24px">
+              <p class="kicker">Administration Repos</p>
+              <h2 class="title">Pilotage de la plateforme</h2>
+              <p class="lead" style="margin:0">Vue globale des opérations, validations et règles commerciales. <strong>Les actions de cette démo restent en mémoire pendant la visite.</strong></p>
+            </div>
+            <div class="admin-shell">
+              <aside class="admin-side">
+                <div class="admin-mark">
+                  <span aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7v5c0 5 3.4 8 8 9 4.6-1 8-4 8-9V7l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+                  <div><b>Admin Repos</b><small>Contrôle &amp; conformité</small></div>
+                </div>
+                <nav aria-label="Menu administration">
+                  <button type="button" data-admin="overview" aria-current="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Vue globale</button>
+                  <button type="button" data-admin="kyc" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 11 2 2 4-4"/></svg>Validation KYC <span class="unread-badge" id="adminKycCount">3</span></button>
+                  <button type="button" data-admin="moderation" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5m0 0h11l-1 4 4 4H4"/></svg>Modération <span class="unread-badge" id="adminModCount">4</span></button>
+                  <button type="button" data-admin="commissions" aria-current="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 15 6-6M9.5 9.5h.01M14.5 14.5h.01"/></svg>Commissions</button>
+                </nav>
+              </aside>
+
+              <div>
+                <div id="admin-overview">
+                  <div class="admin-kpis">
+                    <article class="admin-kpi"><span class="ak-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M4 19V8m5 11V4m5 15v-7m5 7V6"/></svg></span><small>Chiffre d’affaires total</small><strong>48,6 M FCFA</strong><span>▲ 14,2 % sur 30 jours</span></article>
+                    <article class="admin-kpi"><span class="ak-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M5 4h14v17l-7-4-7 4V4Z"/></svg></span><small>Réservations</small><strong>2 846</strong><span>+318 ce mois</span></article>
+                    <article class="admin-kpi"><span class="ak-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M3 21V9l9-6 9 6v12M8 21v-7h8v7"/></svg></span><small>Établissements</small><strong>128</strong><span>9 en validation</span></article>
+                    <article class="admin-kpi"><span class="ak-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M19 8v6m-3-3h6"/></svg></span><small>Utilisateurs</small><strong>8 412</strong><span>+6,8 % ce mois</span></article>
+                  </div>
+                  <div class="admin-charts">
+                    <div class="panel">
+                      <div class="rates-head"><div><h3>Activité des 6 derniers mois</h3><p>Volume de réservations et évolution du chiffre d’affaires.</p></div></div>
+                      <svg class="chart" viewBox="0 0 680 250" role="img" aria-label="Graphique des réservations et du chiffre d’affaires d’avril à septembre 2026">
+                        <line x1="44" y1="205" x2="660" y2="205" stroke="var(--line)"/><line x1="44" y1="145" x2="660" y2="145" stroke="var(--line)"/><line x1="44" y1="85" x2="660" y2="85" stroke="var(--line)"/>
+                        <g fill="var(--teal)"><rect x="70" y="132" width="54" height="73" rx="7"/><rect x="170" y="115" width="54" height="90" rx="7"/><rect x="270" y="105" width="54" height="100" rx="7"/><rect x="370" y="82" width="54" height="123" rx="7"/><rect x="470" y="63" width="54" height="142" rx="7"/><rect x="570" y="42" width="54" height="163" rx="7"/></g>
+                        <polyline points="97,154 197,139 297,126 397,100 497,82 597,61" fill="none" stroke="var(--coral)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <g fill="var(--coral)"><circle cx="97" cy="154" r="5"/><circle cx="197" cy="139" r="5"/><circle cx="297" cy="126" r="5"/><circle cx="397" cy="100" r="5"/><circle cx="497" cy="82" r="5"/><circle cx="597" cy="61" r="5"/></g>
+                        <g><text x="97" y="229" text-anchor="middle">avr.</text><text x="197" y="229" text-anchor="middle">mai</text><text x="297" y="229" text-anchor="middle">juin</text><text x="397" y="229" text-anchor="middle">juil.</text><text x="497" y="229" text-anchor="middle">août</text><text x="597" y="229" text-anchor="middle">sept.</text></g>
+                      </svg>
+                      <div class="admin-chart-legend"><span><i style="background:var(--teal)"></i>Réservations</span><span><i style="background:var(--coral)"></i>Chiffre d’affaires</span></div>
+                    </div>
+                    <div class="panel">
+                      <h3>Répartition des établissements</h3>
+                      <div class="donut-wrap"><svg width="210" height="210" viewBox="0 0 120 120" role="img" aria-label="Répartition de 128 établissements par catégorie"><circle cx="60" cy="60" r="43" fill="none" stroke="var(--chip)" stroke-width="18"/><circle cx="60" cy="60" r="43" fill="none" stroke="var(--teal)" stroke-width="18" stroke-dasharray="108 270" stroke-dashoffset="0" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="43" fill="none" stroke="var(--coral)" stroke-width="18" stroke-dasharray="70 270" stroke-dashoffset="-108" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="43" fill="none" stroke="var(--yellow-2)" stroke-width="18" stroke-dasharray="54 270" stroke-dashoffset="-178" transform="rotate(-90 60 60)"/></svg><div class="donut-copy"><strong>128</strong><small>actifs</small></div></div>
+                      <div class="admin-chart-legend"><span><i style="background:var(--teal)"></i>Hôtels 40 %</span><span><i style="background:var(--coral)"></i>Motels 26 %</span><span><i style="background:var(--yellow-2)"></i>Meublés 20 %</span><span><i style="background:var(--chip)"></i>Auberges 14 %</span></div>
+                    </div>
+                  </div>
+                  <div class="panel"><div class="rates-head"><div><h3>À traiter aujourd’hui</h3><p>Les files nécessitant une décision de l’équipe Repos.</p></div></div><div class="kpis" style="margin-top:16px"><div class="kpi"><small>Dossiers KYC</small><b id="adminTodoKyc">3</b><span class="delta">En attente</span></div><div class="kpi"><small>Contenus signalés</small><b id="adminTodoMod">4</b><span class="delta" style="color:var(--coral)">À modérer</span></div><div class="kpi"><small>Litiges paiement</small><b>2</b><span class="delta">En analyse</span></div><div class="kpi"><small>Tickets support</small><b>11</b><span class="delta">Temps moyen 24 min</span></div></div></div>
+                </div>
+
+                <div id="admin-kyc" class="hidden">
+                  <div class="panel" style="margin-top:0"><div class="rates-head"><div><h3>Validation des tenanciers</h3><p>Contrôlez l’identité du responsable et l’immatriculation de l’établissement avant publication.</p></div><span class="st st-wait" id="kycQueueLabel">3 en attente</span></div><div class="admin-list" id="kycList" style="margin-top:18px"></div></div>
+                </div>
+
+                <div id="admin-moderation" class="hidden">
+                  <div class="panel" style="margin-top:0"><div class="rates-head"><div><h3>Modération</h3><p>Traitez les annonces et avis signalés par la communauté ou les contrôles internes.</p></div><span class="st st-wait" id="modQueueLabel">4 signalements</span></div><div class="mod-tabs" role="group" aria-label="Type de contenu signalé" style="margin-top:18px"><button type="button" class="pill" data-modtab="all" aria-pressed="true">Tous</button><button type="button" class="pill" data-modtab="listing" aria-pressed="false">Annonces</button><button type="button" class="pill" data-modtab="review" aria-pressed="false">Avis</button></div><div class="admin-list" id="modList"></div></div>
+                </div>
+
+                <div id="admin-commissions" class="hidden">
+                  <div class="panel" style="margin-top:0"><div class="rates-head"><div><h3>Réglages des commissions</h3><p>Définissez le taux prélevé sur chaque réservation confirmée, selon la catégorie.</p></div></div><form id="commissionForm"><div class="commission-list" id="commissionList" style="margin-top:18px"></div><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px"><button type="submit" class="btn btn-cta">Appliquer les taux</button><span id="commissionStatus" style="color:var(--ink-soft);font-size:13px;font-weight:700" aria-live="polite">Taux actuellement appliqués à la démo.</span></div></form><p class="admin-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Les nouveaux taux influencent les calculs de commission dans cette session uniquement. Aucun réglage n’est enregistré côté serveur.</span></p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================= ACCOUNT ================= -->
+      <div id="view-account" class="hidden">
+        <section>
+          <div class="wrap">
+            <div class="acct-head">
+              <span class="acct-big-av" aria-hidden="true">G</span>
+              <div>
+                <p class="kicker">Mon compte</p>
+                <h2 class="title">Bonjour, Green</h2>
+                <p class="lead" style="margin:0">Retrouvez vos réservations, le moyen de paiement choisi, vos reçus, votre code et votre QR à présenter à l'accueil. <strong>Compte voyageur de démonstration : réservations d'exemple, rien n'est enregistré.</strong></p>
+              </div>
+            </div>
+            <div class="rtabs" role="group" aria-label="Sections de mon compte">
+              <button type="button" class="pill" data-atab="resa" aria-pressed="true">Mes réservations</button>
+              <button type="button" class="pill" data-atab="favs" aria-pressed="false">Mes favoris <span class="cnt" id="cntFav">0</span></button>
+              <button type="button" class="pill" data-atab="loyalty" aria-pressed="false">Fidélité &amp; parrainage <span class="cnt" id="cntLoyalty">0 pts</span></button>
+              <button type="button" class="pill" data-atab="notifications" aria-pressed="false">Notifications <span class="cnt" id="cntNotif">3</span></button>
+            </div>
+            <div id="acct-resa">
+            <div class="rtabs" role="group" aria-label="Onglets de mes réservations">
+              <button type="button" class="pill" data-rtab="upcoming" aria-pressed="true">À venir <span class="cnt" id="cntUpcoming">0</span></button>
+              <button type="button" class="pill" data-rtab="ongoing" aria-pressed="false">En cours <span class="cnt" id="cntOngoing">0</span></button>
+              <button type="button" class="pill" data-rtab="past" aria-pressed="false">Passées <span class="cnt" id="cntPast">0</span></button>
+            </div>
+            <div class="res-list" id="resList"></div>
+            </div>
+            <div id="acct-favs" class="hidden">
+              <p class="lead" style="margin-bottom:18px">Les établissements que vous avez sauvegardés avec le cœur — sur les résultats de recherche, dans « Autour de moi » ou sur leur page détail. Re-réservez-les en un clic, sans repasser par le formulaire. <strong>Démo : les favoris sont gardés en mémoire le temps de cette visite uniquement.</strong></p>
+              <div class="grid" id="favGrid"></div>
+            </div>
+            <div id="acct-loyalty" class="hidden">
+              <p class="lead" style="margin-bottom:18px">Gagnez des points à chaque réservation confirmée, montez de palier et échangez vos points contre des avantages. <strong>Démo en mémoire : 1 point par tranche de 1 000 FCFA dépensée, solde réinitialisé à chaque rechargement.</strong></p>
+
+              <div class="loyal-hero">
+                <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:flex-start">
+                  <div>
+                    <div class="pts-label">Mon solde Repos</div>
+                    <div class="pts-big"><span id="loyaltyPoints">0</span> <small>points</small></div>
+                    <div style="font-weight:600;opacity:.9;font-size:14px">Soit <span id="loyaltyFcfa">0 FCFA</span> dépensés sur Repos</div>
+                  </div>
+                  <span class="tier-pill" id="loyaltyTierPill"><span class="tier-dot" aria-hidden="true"></span><span id="loyaltyTierName">Bronze</span></span>
+                </div>
+                <div class="progress-wrap">
+                  <div class="progress-track" role="progressbar" id="loyaltyProgress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progression vers le palier suivant">
+                    <div class="progress-fill" id="loyaltyProgressFill" style="width:0%"></div>
+                  </div>
+                  <div class="progress-meta"><span id="loyaltyProgressText">0 / 100 points vers Argent</span><span id="loyaltyRemaining">Plus que 100 points</span></div>
+                </div>
+                <p style="margin:14px 0 0;font-size:13px;font-weight:600;opacity:.88">Les points sont crédités automatiquement dès qu'une réservation est confirmée dans le tunnel de réservation — essayez : réservez un hébergement et revenez ici.</p>
+              </div>
+
+              <div class="tier-cards" id="tierCards" aria-label="Paliers du programme de fidélité"></div>
+
+              <div class="loyal-grid" style="margin-top:22px">
+                <div>
+                  <h3 style="margin:0 0 6px;font-size:20px">Récompenses échangeables</h3>
+                  <p style="margin:0 0 14px;color:var(--ink-soft);font-weight:600;font-size:14px">Échangez vos points contre un avantage à utiliser sur votre prochaine réservation. L'avantage reste valable dans cette démo, le temps de la visite.</p>
+                  <div class="reward-grid" id="rewardGrid"></div>
+                  <div id="ownedRewards" style="margin-top:14px"></div>
+                </div>
+                <div class="panel" style="margin-top:0">
+                  <h3>Derniers mouvements</h3>
+                  <div class="hist-list" id="loyaltyHistory"></div>
+                </div>
+              </div>
+
+              <div style="height:34px"></div>
+              <p class="kicker">Parrainage</p>
+              <h3 style="margin:0 0 8px;font-size:24px;letter-spacing:-.01em">Invitez vos proches, gagnez du crédit</h3>
+              <p class="lead" style="margin-bottom:18px">Partagez votre code : quand un filleul confirme sa première réservation, vous recevez <strong>2 500 FCFA de crédit</strong> et lui aussi. Crédit utilisable sur n'importe quel créneau, paiement sur place déduit à l'accueil.</p>
+
+              <div class="panel" style="margin-top:0">
+                <div class="ref-code-box">
+                  <div class="ref-code">
+                    <small>Mon code de parrainage</small>
+                    <b id="refCode">GREEN-REPOS-26</b>
+                    <span class="ref-link" id="refLink">https://repos.ga/inscription?parrain=GREEN-REPOS-26</span>
+                  </div>
+                  <button type="button" class="btn btn-cta" id="btnCopyRef" style="justify-content:center;align-self:center">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    Copier mon lien
+                  </button>
+                </div>
+                <div class="ref-stats">
+                  <div class="ref-stat"><b id="refCount">3</b><small>filleuls inscrits</small></div>
+                  <div class="ref-stat"><b id="refValidated">2</b><small>premières réservations validées</small></div>
+                  <div class="ref-stat"><b id="refCredit">5 000 FCFA</b><small>de crédit gagné</small></div>
+                </div>
+                <h4 style="margin:18px 0 12px;font-size:16px">Mes filleuls <span style="color:var(--ink-soft);font-weight:600;font-size:13px">(exemples de démonstration)</span></h4>
+                <div style="display:flex;flex-direction:column;gap:10px" id="refList"></div>
+                <p style="margin:14px 0 0;color:var(--ink-soft);font-weight:600;font-size:13px">Astuce démo : le bouton « Copier mon lien » copie vraiment le lien dans votre presse-papiers, pour le coller dans WhatsApp ou un SMS.</p>
+              </div>
+            </div>
+            <div id="acct-notifications" class="hidden">
+              <div style="display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px">
+                <div>
+                  <h3 style="margin:0 0 5px;font-size:24px">Centre de notifications</h3>
+                  <p class="lead" style="margin:0">Confirmations de réservation, rappels avant l'arrivée et offres Repos. Les réglages ci-dessous ne durent que pendant cette démonstration.</p>
+                </div>
+                <button type="button" class="btn btn-ghost btn-sm" id="markAllRead">Tout marquer comme lu</button>
+              </div>
+              <div class="loyal-grid">
+                <div>
+                  <div class="notif-list" id="notifList"></div>
+                </div>
+                <aside class="panel" style="margin-top:0">
+                  <h3>Canaux de notification</h3>
+                  <p style="margin:-6px 0 4px;color:var(--ink-soft);font-weight:600;font-size:14px">Choisissez comment Repos peut vous prévenir. Aucun message réel n'est envoyé dans cette démo.</p>
+                  <div class="chan-list">
+                    <label class="chan-row">
+                      <span class="chan-ic" style="background:#25D366" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-5.2A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8.5 8.3c.6 3 2.3 4.8 5.3 5.7"/></svg></span>
+                      <span><b>WhatsApp</b><small>Confirmations et rappels</small></span>
+                      <span class="toggle"><input type="checkbox" data-channel="whatsapp" checked aria-label="Activer les notifications WhatsApp"/><span class="tk"></span></span>
+                    </label>
+                    <label class="chan-row">
+                      <span class="chan-ic" style="background:#1f7a6d" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/><path d="M8 9h8M8 13h5"/></svg></span>
+                      <span><b>SMS</b><small>Codes et changements urgents</small></span>
+                      <span class="toggle"><input type="checkbox" data-channel="sms" checked aria-label="Activer les notifications SMS"/><span class="tk"></span></span>
+                    </label>
+                    <label class="chan-row">
+                      <span class="chan-ic" style="background:#f66236" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+                      <span><b>Email</b><small>Reçus, confirmations et promotions</small></span>
+                      <span class="toggle"><input type="checkbox" data-channel="email" aria-label="Activer les notifications Email"/><span class="tk"></span></span>
+                    </label>
+                  </div>
+                  <div class="demo-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Réglages simulés en mémoire. Ils reviennent aux valeurs initiales au rechargement.</span></div>
+                </aside>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site">
+      <div class="wrap">
+        <div class="cols">
+          <div>
+            <a class="logo" href="#" data-nav="home" style="color:#fff;margin-bottom:14px">
+              <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18h18"/><path d="M5 10V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/><path d="M7 7h4"/></svg></span>
+              Repos<em>.</em>
+            </a>
+            <p style="color:#b9cdc2;font-weight:600;font-size:14px;max-width:300px">La plateforme gabonaise des hébergements à la journée et à la nuit : motels, hôtels, maisons meublées et auberges, de Libreville à Franceville.</p>
+            <div class="pay" aria-label="Moyens de paiement proposés"><span>Paiement sur place</span><span>Airtel Money</span><span>Moov Money</span><span>Visa</span><span>Mastercard</span></div>
+          </div>
+          <div>
+            <h4>Destinations</h4>
+            <ul><li><a href="#" data-city-link="Libreville">Libreville</a></li><li><a href="#" data-city-link="Port-Gentil">Port-Gentil</a></li><li><a href="#" data-city-link="Franceville">Franceville</a></li><li><a href="#" data-city-link="Owendo">Owendo</a></li><li><a href="#" data-nav="near">Autour de moi</a></li></ul>
+          </div>
+          <div>
+            <h4>Repos</h4>
+            <ul><li><a href="#faq">Comment ça marche</a></li><li><a href="#" data-nav="host">Devenir tenancier</a></li><li><a href="#" data-nav="host">Espace tenanciers</a></li><li><a href="#faq">Aide &amp; FAQ</a></li></ul>
+          </div>
+          <div>
+            <h4>Contact</h4>
+            <ul><li><a href="mailto:bonjour@repos.ga">bonjour@repos.ga</a></li><li><a href="tel:+24101000000">+241 01 00 00 00</a></li><li><a href="#" data-nav="near">Bord de mer, Libreville — Gabon</a></li></ul>
+          </div>
+        </div>
+        <div class="bottom">
+          <span>© 2026 Repos — Démonstration visuelle. Les établissements et tarifs affichés sont des exemples.</span>
+          <span>Conçu à Libreville, pour tout le Gabon.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ================= BOOKING MODAL ================= -->
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+      <div class="scrim" data-close></div>
+      <div class="box">
+        <div class="head">
+          <img id="mImg" src="assets/img-b4308f5cd561.jpeg" alt="" />
+          <button type="button" class="fav-btn" id="mFav" data-fav="" aria-pressed="false" title="Ajouter aux favoris" aria-label="Ajouter aux favoris"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></button>
+          <button type="button" class="icon-btn x" data-close aria-label="Fermer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="content">
+          <div id="mForm">
+            <div class="steps-bar" aria-label="Étapes de réservation"><span class="stb on"><span>1</span> Séjour</span><span class="sep"></span><span class="stb"><span>2</span> Paiement</span><span class="sep"></span><span class="stb"><span>3</span> Confirmation</span></div>
+            <h3 id="mTitle" style="margin:0 0 4px;font-size:23px"></h3>
+            <p id="mLoc" style="margin:0 0 14px;color:var(--ink-soft);font-weight:600"></p>
+            <button type="button" class="btn btn-ghost btn-sm contact-detail" id="detailContact"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/><path d="M8 9h8M8 13h5"/></svg>Contacter l’établissement</button>
+            <form id="bookForm">
+              <div class="form-grid">
+                <div class="f-field"><label for="bDate">Date d'arrivée</label><input type="date" id="bDate" required /></div>
+                <div class="f-field"><label for="bSlot">Créneau</label>
+                  <select id="bSlot">
+                    <option value="3h">Sieste · 3 h (11 h – 14 h)</option>
+                    <option value="6h">Pause · 6 h (9 h – 15 h)</option>
+                    <option value="jour">Journée (8 h – 18 h)</option>
+                    <option value="nuit" selected>Nuit (à partir de 14 h)</option>
+                  </select>
+                  <p class="availability-note" id="slotAvailabilityMsg" role="status"></p>
+                </div>
+                <div class="f-field"><label for="bGuests">Voyageurs</label>
+                  <select id="bGuests"><option>1 personne</option><option selected>2 personnes</option><option>3 personnes</option><option>4 personnes et +</option></select>
+                </div>
+                <div class="f-field"><label for="bName">Votre nom</label><input id="bName" required placeholder="Ex. Aïcha B." autocomplete="name" aria-label="Votre nom" /></div>
+                <div class="f-field" style="grid-column:1/-1"><label for="bPhone">Téléphone (pour le code de réservation)</label><input id="bPhone" required placeholder="Ex. 077 00 00 00" autocomplete="tel" aria-label="Téléphone pour le code de réservation" /></div>
+              </div>
+              <div class="book-extras" id="bookExtrasWrap">
+                <h4>Personnalisez votre séjour</h4>
+                <p>Sélectionnez les extras proposés par cet établissement. Ils s'ajoutent au total.</p>
+                <div class="book-extra-list" id="bookExtras"></div>
+              </div>
+              <div class="sum" style="margin-top:18px">
+                <div class="row"><span id="sLabel">Tarif standard</span><span id="sBase"></span></div>
+                <div class="row promo-line hidden" id="sPromoRow"><span id="sPromoLabel">Promo flash</span><span id="sPromo"></span></div>
+                <div class="extra-summary-lines" id="sExtrasRows"></div>
+                <div class="row"><span>Frais de service</span><span>0 FCFA</span></div>
+                <div class="row"><span>Règlement</span><span>à choisir à l'étape suivante</span></div>
+                <div class="row total"><span>Total</span><b id="sTotal"></b></div>
+              </div>
+              <button class="btn btn-cta" type="submit" style="width:100%;justify-content:center;margin-top:18px">Continuer vers le paiement</button>
+              <p style="text-align:center;color:var(--ink-soft);font-weight:600;font-size:13px;margin:12px 0 0">Annulation gratuite jusqu'à l'arrivée · Aucun débit réel dans cette démo</p>
+            </form>
+            <div id="mReviews" aria-live="polite"></div>
+          </div>
+          <div id="mPayment" class="hidden">
+            <div class="steps-bar" aria-label="Étapes de réservation"><span class="stb done">✓ Séjour</span><span class="sep"></span><span class="stb on"><span>2</span> Paiement</span><span class="sep"></span><span class="stb"><span>3</span> Confirmation</span></div>
+            <h3 style="margin:0 0 5px;font-size:23px">Comment souhaitez-vous payer ?</h3>
+            <p style="margin:0 0 16px;color:var(--ink-soft);font-weight:600" id="payStayLine"></p>
+            <div class="sum" style="margin-bottom:16px"><div class="extra-summary-lines" id="payExtras"></div><div class="row total"><span>Total de la réservation</span><b id="payTotal"></b></div></div>
+            <div class="pay-grid" id="payChoices" role="radiogroup" aria-label="Moyen de paiement">
+              <button type="button" class="pay-opt" data-pay="airtel" role="radio" aria-checked="false"><span class="pay-brand airtel">Airtel</span><span><b>Airtel Money</b><small>Confirmation simulée par téléphone</small></span><span class="pay-check">✓</span></button>
+              <button type="button" class="pay-opt" data-pay="moov" role="radio" aria-checked="false"><span class="pay-brand moov">Moov</span><span><b>Moov Money</b><small>Confirmation simulée par téléphone</small></span><span class="pay-check">✓</span></button>
+              <button type="button" class="pay-opt" data-pay="card" role="radio" aria-checked="false"><span class="pay-brand card"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span><span><b>Carte bancaire</b><small>Visa ou Mastercard — formulaire démo</small></span><span class="pay-check">✓</span></button>
+              <button type="button" class="pay-opt" data-pay="place" role="radio" aria-checked="false"><span class="pay-brand place"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M9 21v-7h6v7"/></svg></span><span><b>Paiement sur place</b><small>Réservez maintenant, réglez à l'arrivée</small></span><span class="pay-check">✓</span></button>
+            </div>
+            <div class="pay-panel hidden" id="payMobilePanel">
+              <h4 id="mobileTitle">Paiement Mobile Money</h4>
+              <p>Saisissez le numéro qui recevrait la demande de validation. Dans cette démo, aucun message ni débit n'est réellement effectué.</p>
+              <label for="payPhone" style="font-weight:800;font-size:13px;display:block;margin-bottom:6px">Numéro Mobile Money</label>
+              <div class="phone-row"><span class="phone-prefix"><span aria-hidden="true">🇬🇦</span> +241</span><input class="pay-input" id="payPhone" inputmode="tel" autocomplete="tel" placeholder="077 00 00 00" maxlength="13" aria-label="Numéro Mobile Money" /></div>
+              <p class="pay-err" id="phoneErr">Entrez un numéro gabonais valide (8 ou 9 chiffres).</p>
+            </div>
+            <div class="pay-panel hidden" id="payCardPanel">
+              <h4>Carte bancaire</h4>
+              <p>Formulaire de démonstration uniquement : les informations ne quittent pas cette page et ne sont pas conservées.</p>
+              <div class="f-field"><label for="cardNumber">Numéro de carte</label><input class="pay-input" id="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" maxlength="19" aria-label="Numéro de carte" /></div>
+              <div class="form-grid" style="margin-top:12px">
+                <div class="f-field"><label for="cardExpiry">Expiration</label><input class="pay-input" id="cardExpiry" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA" maxlength="5" aria-label="Expiration" /></div>
+                <div class="f-field"><label for="cardCvc">CVC</label><input class="pay-input" id="cardCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4" aria-label="CVC" /></div>
+              </div>
+              <p class="pay-err" id="cardErr">Complétez le numéro, l'expiration et le CVC.</p>
+            </div>
+            <div class="pay-panel hidden" id="payPlacePanel">
+              <h4>Vous paierez à l'arrivée</h4>
+              <p style="margin-bottom:0">Présentez votre code ou QR à l'accueil. L'établissement accepte les espèces et, selon disponibilité, le Mobile Money.</p>
+            </div>
+            <div class="demo-note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Démonstration visuelle : aucun paiement réel, aucune donnée conservée. Les champs servent uniquement à simuler le parcours.</span></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+              <button type="button" class="btn btn-ghost btn-sm" id="payBack">Retour</button>
+              <button type="button" class="btn btn-cta" id="payConfirm" style="flex:1;justify-content:center">Confirmer ce moyen de paiement</button>
+            </div>
+          </div>
+          <div id="mProcessing" class="hidden pay-processing" aria-live="polite"><div class="spinner" aria-hidden="true"></div><h3 id="processTitle" style="margin:0 0 5px">Confirmation en cours…</h3><p id="processText" style="margin:0;color:var(--ink-soft);font-weight:600">Simulation sécurisée, aucun débit réel.</p></div>
+          <div id="mConfirm" class="hidden confirm">
+            <div class="steps-bar" aria-label="Étapes de réservation"><span class="stb done">✓ Séjour</span><span class="sep"></span><span class="stb done">✓ Paiement</span><span class="sep"></span><span class="stb on"><span>3</span> Confirmation</span></div>
+            <div class="big"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <h3 style="margin:0 0 6px;font-size:23px">Réservation confirmée !</h3>
+            <p id="cText" style="color:var(--ink-soft);font-weight:600;margin:0 0 16px"></p>
+            <div class="code" id="cCode">REPOS-0000</div>
+            <div class="confirm-extras hidden" id="cExtras"></div>
+            <p id="cPayMethod" style="font-weight:800;margin:14px 0 4px"></p>
+            <p style="color:var(--ink-soft);font-weight:600;font-size:14px;margin-top:4px">Retrouvez votre code, le moyen choisi et votre reçu dans « Mes réservations ». Les notifications de démonstration apparaissent dans votre centre de notifications.</p>
+            <button type="button" class="btn btn-green" data-close style="margin-top:8px">Parfait, merci</button>
+            <button type="button" class="btn btn-ghost" id="cGoAccount" style="margin-top:8px">Voir mes réservations</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= CANCEL MODAL ================= -->
+    <div class="modal" id="cancelModal" role="dialog" aria-modal="true" aria-labelledby="xTitle">
+      <div class="scrim" data-xclose></div>
+      <div class="box" style="width:min(460px,94vw)">
+        <div class="content">
+          <h3 id="xTitle" style="margin:0 0 8px;font-size:22px">Annuler gratuitement ?</h3>
+          <p style="color:var(--ink-soft);font-weight:600;margin:0 0 16px">Vous pouvez annuler cette réservation sans frais jusqu'à l'heure d'arrivée. Cette démonstration ne réalise aucun débit réel : aucun remboursement n'est nécessaire.</p>
+          <div class="sum" id="xSum"></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+            <button type="button" class="btn btn-ghost btn-sm" data-xclose>Garder ma réservation</button>
+            <button type="button" class="btn btn-danger btn-sm" id="xConfirm">Oui, annuler gratuitement</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MESSAGERIE CLIENT (Étape 9) ================= -->
+    <div class="modal" id="messageModal" role="dialog" aria-modal="true" aria-labelledby="clientThreadTitle">
+      <div class="scrim" data-msgclose></div>
+      <div class="box client-thread-box">
+        <div class="thread-pane">
+          <div class="thread-head">
+            <img id="clientThreadImg" src="assets/img-b4308f5cd561.jpeg" alt="" />
+            <div style="flex:1;min-width:0"><b id="clientThreadTitle">Conversation avec l’établissement</b><small id="clientThreadMeta"></small></div>
+            <button type="button" class="icon-btn" data-msgclose aria-label="Fermer la conversation"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+          <div class="thread-messages" id="clientThreadMessages" aria-live="polite"></div>
+          <form class="message-compose" id="clientMessageForm">
+            <label class="hidden" for="clientMessageInput">Message à l’établissement</label>
+            <textarea id="clientMessageInput" rows="1" maxlength="500" placeholder="Écrire à l’établissement…" required></textarea>
+            <button type="submit" class="btn btn-green btn-sm">Envoyer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= REVIEW MODAL (Étape 4) ================= -->
+    <div class="modal" id="reviewModal" role="dialog" aria-modal="true" aria-labelledby="rTitle">
+      <div class="scrim" data-rclose></div>
+      <div class="box" style="width:min(520px,94vw)">
+        <div class="content">
+          <h3 id="rTitle" style="margin:0 0 4px;font-size:22px">Laisser un avis</h3>
+          <p id="rStay" style="margin:0 0 18px;color:var(--ink-soft);font-weight:600"></p>
+          <form id="reviewForm">
+            <div class="f-field">
+              <label id="rStarsLabel">Votre note</label>
+              <div class="star-input" id="rStars" role="radiogroup" aria-labelledby="rStarsLabel"></div>
+              <p id="rStarHint" style="margin:8px 0 0;font-weight:700;color:var(--ink-soft);font-size:13px">Touchez une étoile pour noter votre séjour.</p>
+            </div>
+            <div class="f-field" style="margin-top:14px"><label for="rHeadline">Titre de l'avis</label><input id="rHeadline" required maxlength="80" placeholder="Ex. Sieste parfaite entre deux vols" /></div>
+            <div class="f-field" style="margin-top:14px"><label for="rText">Votre commentaire</label><textarea id="rText" rows="4" required placeholder="Racontez votre séjour : accueil, propreté, calme, petit-déjeuner…"></textarea></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+              <button type="button" class="btn btn-ghost btn-sm" data-rclose>Pas maintenant</button>
+              <button class="btn btn-cta btn-sm" type="submit">Publier l'avis</button>
+            </div>
+            <p style="color:var(--ink-soft);font-weight:600;font-size:13px;margin:12px 0 0">Votre avis paraîtra sous le prénom « Green » sur la fiche de l'établissement et comptera dans sa note moyenne.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/map.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
